@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn</title>
+    <script src='jquery.js'></script>
+</head>
+<body>
+
+    <form action="", id='gg'>
+        <p><input type="text"  placeholder="Username" name="username"></p>
+        <p><input type="password"  placeholder="Password" name="password"></p>
+        <p><input type="password" placeholder="Verify Password" name="repassword"></p>
+        <p><button>რეგისტრაცია</button></p>
+        <p><div id='div'>
+        <div><ul></ul></div>
+        <p id = 'responsive'></p>
+    </form>
+
+
+
+
+    <script>
+        $('form').on('submit',function(res){
+            res.preventDefault();
+            var send = true;
+            var com = $();
+            var jqu = $(this);
+            var enter_user   = jqu.find('input[name="username"]').val();
+            var enter_pass   = jqu.find('input[name="password"]').val();
+            var enter_repass = jqu.find('input[name="repassword"]').val();
+            var res          = jqu.find('#responsive');
+
+            if (enter_user.length > 3){
+                var sendable_user = enter_user;
+            }else{
+                send = false;
+                com = com.add($('<li />').text('არასწორი მომხმარებელი !'));
+            }
+
+            if (enter_pass.length > 3 & enter_repass==enter_pass){ 
+                var sendable_pass = enter_pass;   
+            }else{
+                if (enter_pass.length > 3 & enter_repass!=enter_pass){
+                    var send = false;
+                    com = com.add($('<li />').text('პაროლი არ ემთხვევა!'));
+                }else{
+                var send = false;
+                com = com.add($('<li />').text('არასწორი პაროლი !'));
+                }
+            }
+            jqu.find('#div ul').html(com);
+            if (send){
+                $.ajax({
+                    url: 'api.php',
+                    method: 'post',
+                    data: {'usr': sendable_user, 'pass': sendable_pass},
+                    success: function(resp){
+                        console.log('done');
+                        console.log(resp);
+                        res.text(resp);
+                    }
+                })
+            }
+        })
+    </script>
+
+</body>
+</html>
+
